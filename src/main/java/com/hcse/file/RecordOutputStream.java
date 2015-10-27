@@ -8,9 +8,17 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.hcse.file.util.Field;
 
 public class RecordOutputStream {
+    protected static final Logger logger = Logger.getLogger(RecordOutputStream.class);
+    
+    private long flushCount = Long.MAX_VALUE;
+
+    private long count;
+
     private BufferedWriter writer;
 
     public RecordOutputStream(String name) throws UnsupportedEncodingException, FileNotFoundException {
@@ -38,18 +46,38 @@ public class RecordOutputStream {
             case 1:
                 writer.write(f.getName());
                 writer.newLine();
+                writer.write(" ");
                 writer.write(f.getValue());
                 break;
             }
 
+            count++;
             writer.newLine();
+
+            if (count > flushCount) {
+                writer.flush();
+            }
         }
     }
 
     public void close() throws IOException {
         if (writer != null) {
+            writer.newLine();
+
             writer.close();
             writer = null;
         }
+    }
+
+    public long getFlushCount() {
+        return flushCount;
+    }
+
+    public void setFlushCount(long flushCount) {
+        this.flushCount = flushCount;
+    }
+
+    public long getCount() {
+        return count;
     }
 }
