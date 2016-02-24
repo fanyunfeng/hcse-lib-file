@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -14,7 +15,7 @@ import com.hcse.file.util.Field;
 
 public class RecordOutputStream {
     protected static final Logger logger = Logger.getLogger(RecordOutputStream.class);
-    
+
     private long flushCount = Long.MAX_VALUE;
 
     private long count;
@@ -22,8 +23,26 @@ public class RecordOutputStream {
     private BufferedWriter writer;
 
     public RecordOutputStream(String name) throws UnsupportedEncodingException, FileNotFoundException {
-        FileOutputStream in = new FileOutputStream(name);
-        writer = new BufferedWriter(new OutputStreamWriter(in, "GBK"));
+        this(name, "GBK");
+    }
+
+    public RecordOutputStream(String name, String charsetName) throws UnsupportedEncodingException,
+            FileNotFoundException {
+        FileOutputStream of = new FileOutputStream(name);
+        writer = new BufferedWriter(new OutputStreamWriter(of, charsetName));
+    }
+
+    public RecordOutputStream(OutputStream os) throws UnsupportedEncodingException, FileNotFoundException {
+        this(os, "GBK");
+    }
+
+    public RecordOutputStream(OutputStream os, String charsetName) throws UnsupportedEncodingException,
+            FileNotFoundException {
+        writer = new BufferedWriter(new OutputStreamWriter(os, charsetName));
+    }
+
+    public RecordOutputStream(BufferedWriter writer) throws UnsupportedEncodingException, FileNotFoundException {
+        this.writer = writer;
     }
 
     public void writeRecord(Record record) throws IOException {
