@@ -11,9 +11,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hcse.file.filter.FilterManager;
 import com.hcse.file.util.Field;
 
-public class RecordOutputStream {
+public class RecordOutputStream extends FilterManager {
     protected static final Logger logger = Logger.getLogger(RecordOutputStream.class);
 
     private long flushCount = Long.MAX_VALUE;
@@ -52,10 +53,18 @@ public class RecordOutputStream {
             return;
         }
 
+        if (!doRecordFilter(record)) {
+            return;
+        }
+
         writer.write("!!");
         writer.newLine();
 
         for (Field f : fields) {
+            if (!doFieldFilter(record, f)) {
+                continue;
+            }
+
             switch (f.getType()) {
             case 0:
                 writer.write(f.getName());

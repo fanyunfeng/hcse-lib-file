@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import com.hcse.file.filter.RecordHandler;
+
 public class DumpHandler implements RecordHandler {
     protected static final Logger logger = Logger.getLogger(DumpHandler.class);
 

@@ -19,11 +19,15 @@ public class Record {
         fieldMap = new HashMap<String, Field>(size);
     }
 
+    public void pushField(Field field) {
+        fields.add(field);
+        fieldMap.put(field.getName(), field);
+    }
+
     public void pushField(String name, String value, int type) {
         Field field = new Field(name, value, type);
 
-        fields.add(field);
-        fieldMap.put(name, field);
+        pushField(field);
     }
 
     public int getSize() {
@@ -36,5 +40,9 @@ public class Record {
 
     public List<Field> getFields() {
         return fields;
+    }
+
+    public Field[] getFieldArray() {
+        return fields.toArray(new Field[fields.size()]);
     }
 }
